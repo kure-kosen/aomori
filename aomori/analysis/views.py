@@ -30,9 +30,12 @@ def get_target_contour_dict():
         target = cv2.cvtColor(target, cv2.COLOR_BGR2RGB)
     return target_contour_dict
 
-def get_shapes(img_path):
+def get_shapes(img_path, img_array=None):
     # tar = 'datasets/test.png'
-    tegaki = cv2.imread(img_path)
+    if img_array is None:
+        tegaki = cv2.imread(img_path)
+    else:
+        tegaki = img_array
     tegaki_gray = cv2.cvtColor(tegaki, cv2.COLOR_BGR2GRAY)
 
     tegaki_preprocessed = cv2.GaussianBlur(tegaki_gray, (5, 5), 0)
@@ -95,6 +98,7 @@ def get_shapes(img_path):
 class Shapes:
     state = 'nomal'
     num = 0
+    count = 0
     repeat_count = 0
 
     def __init__(self, shapes):
@@ -116,6 +120,7 @@ class Shapes:
         return None
 
     def action(self):
+        self.result = ''
         while self.num < len(self.shapes):
             if self.shapes[self.num]['name'] == 'rectangle':
                 pass
@@ -124,10 +129,12 @@ class Shapes:
             elif self.shapes[self.num]['name'] == 'circle':
                 self._circle()
             self._next()
+        return self.result
 
     def reset(self):
         self.state = 'nomal'
         self.num = 0
+        self.result = ''
 
     def _rectangle(self):
         import datetime
@@ -158,6 +165,8 @@ class Shapes:
 
     def _circle(self):
         print('circle', self.num)
+        self.count += 1
+        self.result += f'[{self.count}]: corcle {self.num}\n'
         return 0
 
     def _next(self):
