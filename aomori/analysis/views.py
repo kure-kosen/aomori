@@ -47,10 +47,10 @@ def get_shapes(img_path, img_array=None):
 
     min_im_area = (height / 50) * (width / 50)
     large_contours = [cnt for cnt in tegaki_contours if cv2.contourArea(cnt) > min_im_area]
-    cv2.drawContours(tegaki, large_contours, -1, (0,0,255), 3)
 
     # BGRからRGBに変換して画像読込み
-    tegaki = cv2.cvtColor(tegaki, cv2.COLOR_BGR2RGB)
+    # PILで読み込むとすでにRGBになっているようでいらないみたい
+    # tegaki = cv2.cvtColor(tegaki, cv2.COLOR_BGR2RGB)
 
     target_contour_dict = get_target_contour_dict()
 
@@ -75,7 +75,7 @@ def get_shapes(img_path, img_array=None):
         else:
             pass
 
-    # 色の判定
+    # 色の判定と描画
     hsv = cv2.cvtColor(tegaki, cv2.COLOR_RGB2HSV)
     for shape in shapes:
         shape['hsv'] = hsv[shape['y'], shape['x']]
@@ -89,10 +89,11 @@ def get_shapes(img_path, img_array=None):
             shape['color'] = 'gray'
         else:
             shape['color'] = 'other'
+        cv2.drawContours(tegaki, shape['contour'], -1, (255, 0, 0), 5)
 
     # x座標昇順にソート
     shapes = sorted(shapes, key=lambda x:x['x'])
-    return shapes
+    return (shapes, tegaki)
 
 
 class Shapes:

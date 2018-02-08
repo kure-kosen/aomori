@@ -9,9 +9,6 @@
      nav {
        margin-bottom: 25px;
      }
-     .new-link {
-       margin-bottom: 25px;
-     }
     </style>
   </head>
   <body>
@@ -19,22 +16,21 @@
       <a class="navbar-brand" href="{% url 'frontend:index' %}">画像認識を応用したプログラミング教材</a>
     </nav>
     <div class="container">
-      <a href="{% url 'frontend:upload' %}" class="btn btn-primary new-link">新規作成</a>
-      {% if images %}
-      <div class="card-columns">
-        {% for image in images %}
-        <div class="card text-right" style="width: 18rem;">
-          <a href="{% url 'frontend:result' image.pk %}"><img class="card-img-top" src="{{ image.result.url }}" alt="Card image cap"></a>
-          <div class="card-footer">
-            <small class="text-muted">作成日時: {{ image.created }}</small>
-            <a href="{% url 'frontend:result' image.pk %}" class="btn btn-link btn-sm">結果</a>
-          </div>
+      {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+      <h2>実行結果</h2>
+      <div class="row">
+        <div class="col">
+          <img alt="result" src="{{ image.original.url }}" class="figure-img img-fluid">
+          <figcaption class="figure-caption">元画像 作成日時:{{ image.created }}</figcaption>
         </div>
-        {% endfor %}
+        <div class="col">
+          <img alt="result" src="{{ image.result.url }}" class="figure-img img-fluid">
+          <figcaption class="figure-caption">認識画像 作成日時:{{ image.created }}</figcaption>
+        </div>
       </div>
-      {% else %}
-      <p>画像がありません。</p>
-      {% endif %}
+      <div class="p-3 mb-2 bg-dark">
+        <pre class="text-white"><code>{{ result }}</code></pre>
+      </div>
     </div>
   </body>
 </html>
