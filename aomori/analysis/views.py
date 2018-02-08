@@ -166,8 +166,18 @@ class Shapes:
 
     def _circle(self):
         print('circle', self.num)
+        color = self.get_shape()['color']
+        if color == 'green':
+            msg = 'GO!'
+        elif color == 'blue':
+            msg = 'TURN!'
+        elif color == 'orange':
+            msg = 'BACK!'
+        else:
+            msg = 'JUMP!'
+
         self.count += 1
-        self.result += f'[{self.count}]: corcle {self.num}\n'
+        self.result += f"[{self.count}]: {self.num}: {msg}\n"
         return 0
 
     def _next(self):
